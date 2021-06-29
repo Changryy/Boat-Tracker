@@ -1,0 +1,48 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Main.gd" type="Script" id=1]
+[ext_resource path="res://Camera2D.gd" type="Script" id=2]
+
+[node name="Control" type="Node2D"]
+script = ExtResource( 1 )
+request_output = NodePath("Fixed/UI/Top Left/Requests/Number")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+limit_left = -67108864
+limit_top = -67108864
+limit_right = 67108864
+limit_bottom = 67108864
+script = ExtResource( 2 )
+
+[node name="Fixed" type="CanvasLayer" parent="."]
+
+[node name="UI" type="Control" parent="Fixed"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Top Left" type="VBoxContainer" parent="Fixed/UI"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Requests" type="HBoxContainer" parent="Fixed/UI/Top Left"]
+margin_right = 107.0
+margin_bottom = 14.0
+
+[node name="Label" type="Label" parent="Fixed/UI/Top Left/Requests"]
+margin_right = 103.0
+margin_bottom = 14.0
+text = "Request Queue:"
+
+[node name="Number" type="Label" parent="Fixed/UI/Top Left/Requests"]
+margin_left = 107.0
+margin_right = 107.0
+margin_bottom = 14.0
