@@ -12,6 +12,7 @@ var zoom = 19
 var loading = true
 var is_zooming = false
 
+var cam_pos = Vector2()
 
 func _ready():
 	RequestHandler.connect("forward_response", self, "_on_request_response")
@@ -32,7 +33,13 @@ func _on_request_response(id, result, response_code, headers, body, metadata):
 		box = Extract.box_pos(body)
 		print("Loaded Box")
 		$Camera2D.position = TileHandler.geo_to_pos(points[-1][0], points[-1][1])
+		cam_pos = $Camera2D.position
 		reload()
+		draw_points(true)
+	if id == "new_pos":
+		var new_pos = Extract.last_pos(body)
+		if Extract.geo(new_pos) == Extract.geo(points[-1]): return
+		points.append(new_pos)
 		draw_points()
 
 
@@ -71,7 +78,7 @@ func draw_tiles():
 	RequestHandler.queue.sort_custom(self, "tile_sort")
 
 
-func draw_points():
+func draw_points(move_cam=false):
 	var new_points = []
 	var sublist = []
 	for point in points:
@@ -80,13 +87,18 @@ func draw_points():
 			new_points.append(sublist.duplicate())
 			sublist.clear()
 	
+	for line in get_tree().get_nodes_in_group("line"):
+		line.queue_free()
+	
 	for x in new_points:
 		var line = Line2D.new()
 		line.points = x
 		line.z_index = 1
 		line.width = 5
-		$Camera2D.position = x[-1]
+		line.add_to_group("line")
+		if move_cam: $Camera2D.position = x[-1]
 		add_child(line)
+	
 
 var moving = false
 var current_zoom = TileHandler.zoom_to_scale(zoom)
@@ -108,17 +120,20 @@ func _physics_process(delta):
 	request_output.text = str(len(RequestHandler.queue))
 	
 	current_zoom = lerp(current_zoom, scale_level, 0.2) as Vector2
-	if current_zoom.distance_to(scale_level) < 8:
+	if current_zoom.distance_to(scale_level) < 8 and is_zooming:
 		is_zooming = false
 		current_zoom = scale_level
+		$Camera2D.position = cam_pos
+		reload()
 	$Camera2D.zoom = current_zoom
-	
+	if is_zooming: $Camera2D.position = lerp($Camera2D.position, cam_pos, 0.2)
 	
 	# ZOOM WITH PGUP and PGDN
-	if Input.is_action_just_pressed("ui_page_up"): change_zoom(1)
-	elif Input.is_action_just_pressed("ui_page_down"): change_zoom(-1)
+	if Input.is_action_just_pressed("ui_page_up"): change_zoom(1, true)
+	elif Input.is_action_just_pressed("ui_page_down"): change_zoom(-1, true)
 
-func change_zoom(dir):
+func change_zoom(dir, in_middle=false):
+	if in_middle: cam_pos = $Camera2D.position
 	if abs(dir) > 1:
 		for i in range(min(dir, 0), max(dir, 0)): change_zoom(dir/abs(dir))
 		return
@@ -128,18 +143,28 @@ func change_zoom(dir):
 	zoom += dir
 	reload()
 
+func zoom_on_position(pos, dir):
+	change_zoom(dir)
+	var new_pos = $Camera2D.position - pos
+	new_pos /= $Camera2D.zoom.x
+	new_pos *= TileHandler.zoom_to_scale(zoom).x
+	new_pos += pos
+	cam_pos = new_pos
 
 func _input(event):
 	if event is InputEventMouseButton:
 		if event.is_pressed():
-			if event.button_index == BUTTON_WHEEL_UP: change_zoom(1)
-			if event.button_index == BUTTON_WHEEL_DOWN: change_zoom(-1)
+			if event.button_index == BUTTON_WHEEL_UP:
+				zoom_on_position(get_global_mouse_position(), 1)
+			if event.button_index == BUTTON_WHEEL_DOWN:
+				zoom_on_position(get_global_mouse_position(), -1)
 		if event.button_index == BUTTON_LEFT and event.doubleclick:
-			$Camera2D.position = get_global_mouse_position()
+			cam_pos = get_global_mouse_position()
 			change_zoom(2)
-	if event is InputEventMouseMotion and Input.is_action_pressed("left_mouse"):
+	if (event is InputEventMouseMotion and Input.is_action_pressed("left_mouse"))\
+	or (event is InputEventScreenDrag):
 		$Camera2D.position -= event.relative * TileHandler.zoom_to_scale(zoom)
-	
+
 
 func sort_zoom():
 	for node in get_tree().get_nodes_in_group("zoom level"):
@@ -157,13 +182,12 @@ func reload():
 		new_zoom.add_to_group("zoom level")
 		add_child(new_zoom)
 	draw_tiles()
-#	sort_zoom()
 	move_child(get_node(str(zoom)), get_child_count())
-#	draw_points()
 
 func _on_loading_finished(): loading = false
 
 
+func _on_in_pressed(): change_zoom(1, true)
+func _on_out_pressed(): change_zoom(-1, true)
 
-
-
+func _on_Refresher_timeout(): RequestHandler.request("new_pos", Extract.anchor_url, null, true)

@@ -46,3 +46,46 @@ text = "Request Queue:"
 margin_left = 107.0
 margin_right = 107.0
 margin_bottom = 14.0
+
+[node name="Bottom Right" type="VBoxContainer" parent="Fixed/UI"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -318.0
+margin_top = -155.0
+margin_right = -42.0
+margin_bottom = -52.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Zoom" type="HBoxContainer" parent="Fixed/UI/Bottom Right"]
+margin_right = 276.0
+margin_bottom = 103.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 50
+
+[node name="in" type="Button" parent="Fixed/UI/Bottom Right/Zoom"]
+margin_right = 113.0
+margin_bottom = 103.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "+"
+
+[node name="out" type="Button" parent="Fixed/UI/Bottom Right/Zoom"]
+margin_left = 163.0
+margin_right = 276.0
+margin_bottom = 103.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "-"
+
+[node name="Refresher" type="Timer" parent="."]
+wait_time = 10.0
+autostart = true
+
+[connection signal="pressed" from="Fixed/UI/Bottom Right/Zoom/in" to="." method="_on_in_pressed"]
+[connection signal="pressed" from="Fixed/UI/Bottom Right/Zoom/out" to="." method="_on_out_pressed"]
+[connection signal="timeout" from="Refresher" to="." method="_on_Refresher_timeout"]

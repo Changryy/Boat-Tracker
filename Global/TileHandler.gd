@@ -6,7 +6,7 @@ const EXPAND = 2
 
 const ROOT = Vector2(1,1) * 67108864
 const MAX_ZOOM = 19
-const MIN_ZOOM = 2
+const MIN_ZOOM = 4
 
 
 func ln(x): return float(log(x) / log(exp(1)))
