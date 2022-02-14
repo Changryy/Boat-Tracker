@@ -1,7 +1,7 @@
 extends Node
 
-var tracker_url = "http://solveig.oslo.no/anchoring-jtt.json"
-var anchor_url = "http://solveig.oslo.no/anchoring-summary.json"
+var tracker_url = "https://solveig.oslo.no/anchoring-jtt.json"
+var anchor_url = "https://solveig.oslo.no/anchoring-summary.json"
 
 func json(content):
 	return JSON.parse(content.get_string_from_utf8()).result

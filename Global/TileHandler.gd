@@ -19,6 +19,7 @@ func _get_image(body):
 	var error = image.load_png_from_buffer(body)
 	if error != OK:
 		push_error("Couldn't load the image.")
+	image.lock()
 	var texture = ImageTexture.new()
 	texture.create_from_image(image)
 	return texture

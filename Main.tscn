@@ -15,6 +15,16 @@ limit_right = 67108864
 limit_bottom = 67108864
 script = ExtResource( 2 )
 
+[node name="BG" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="BG"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Fixed" type="CanvasLayer" parent="."]
 
 [node name="UI" type="Control" parent="Fixed"]
@@ -61,6 +71,7 @@ __meta__ = {
 }
 
 [node name="Zoom" type="HBoxContainer" parent="Fixed/UI/Bottom Right"]
+visible = false
 margin_right = 276.0
 margin_bottom = 103.0
 size_flags_horizontal = 3

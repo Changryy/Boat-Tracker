@@ -22,7 +22,7 @@ func request(id, url, metadata=null, force=false):
 func _ready():
 	http_request = HTTPRequest.new()
 	http_request.connect("request_completed", self, "_on_receive_response")
-#	http_request.use_threads = true
+	http_request.use_threads = false
 	add_child(http_request)
 
 
