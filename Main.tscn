@@ -44,20 +44,21 @@ __meta__ = {
 }
 
 [node name="Requests" type="HBoxContainer" parent="Fixed/UI/Top Left"]
-margin_right = 107.0
-margin_bottom = 14.0
+margin_right = 179.0
+margin_bottom = 25.0
 
 [node name="Label" type="Label" parent="Fixed/UI/Top Left/Requests"]
-margin_right = 103.0
-margin_bottom = 14.0
+margin_right = 171.0
+margin_bottom = 25.0
 text = "Request Queue:"
 
 [node name="Number" type="Label" parent="Fixed/UI/Top Left/Requests"]
-margin_left = 107.0
-margin_right = 107.0
-margin_bottom = 14.0
+margin_left = 179.0
+margin_right = 179.0
+margin_bottom = 25.0
 
 [node name="Bottom Right" type="VBoxContainer" parent="Fixed/UI"]
+visible = false
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0

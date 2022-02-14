@@ -44,3 +44,9 @@ func _fetch_next():
 
 func stop():
 	queue.clear()
+
+
+
+
+
+

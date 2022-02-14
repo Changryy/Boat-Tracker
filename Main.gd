@@ -14,6 +14,14 @@ var is_zooming = false
 
 var cam_pos = Vector2()
 
+enum scroll_type {
+	UNKNOWN,
+	TOUCHPAD,
+	MOUSE_WHEEL
+}
+
+var scroll_sensitivity = scroll_type.UNKNOWN
+
 func _ready():
 	RequestHandler.connect("forward_response", self, "_on_request_response")
 	RequestHandler.connect("done", self, "_on_loading_finished")
@@ -143,7 +151,12 @@ func change_zoom(dir, in_middle=false):
 	zoom += dir
 	reload()
 
+var last_zoom = 0
 func zoom_on_position(pos, dir):
+	if scroll_sensitivity == scroll_type.UNKNOWN: return
+	if scroll_sensitivity == scroll_type.TOUCHPAD:
+		if last_zoom > OS.get_ticks_msec() - 100: return
+	last_zoom = OS.get_ticks_msec()
 	change_zoom(dir)
 	var new_pos = $Camera2D.position - pos
 	new_pos /= $Camera2D.zoom.x
@@ -151,13 +164,30 @@ func zoom_on_position(pos, dir):
 	new_pos += pos
 	cam_pos = new_pos
 
+var input_times = []
+
+# Set scroll sensitivity based on if it detects a mouse or a touchpad
+func update_scroll_sensetivity():
+	if scroll_sensitivity != scroll_type.UNKNOWN: return
+	var now = OS.get_ticks_msec()
+	input_times.append(now)
+	var amount = 0
+	for value in input_times:
+		if value > now - 100: amount += 1
+	if amount > 1: scroll_sensitivity = scroll_type.TOUCHPAD
+	elif now > input_times[0] + 100: scroll_sensitivity = scroll_type.MOUSE_WHEEL
+	else: return
+	input_times.clear()
+
 func _input(event):
 	if event is InputEventMouseButton:
 		if event.is_pressed():
 			if event.button_index == BUTTON_WHEEL_UP:
 				zoom_on_position(get_global_mouse_position(), 1)
+				update_scroll_sensetivity()
 			if event.button_index == BUTTON_WHEEL_DOWN:
 				zoom_on_position(get_global_mouse_position(), -1)
+				update_scroll_sensetivity()
 		if event.button_index == BUTTON_LEFT and event.doubleclick:
 			cam_pos = get_global_mouse_position()
 			change_zoom(2)
