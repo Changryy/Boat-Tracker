@@ -106,7 +106,7 @@ func draw_points(move_cam=false):
 		line.add_to_group("line")
 		if move_cam: $Camera2D.position = x[-1]
 		add_child(line)
-	
+
 
 var moving = false
 var current_zoom = TileHandler.zoom_to_scale(zoom)

@@ -1,7 +1,26 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://Camera2D.gd" type="Script" id=2]
+[ext_resource path="res://Roboto/Roboto-Regular.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Roboto/Roboto-Black.ttf" type="DynamicFontData" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="Theme" id=2]
+default_font = SubResource( 1 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 64
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 4 )
+
+[sub_resource type="Theme" id=4]
+default_font = SubResource( 3 )
 
 [node name="Control" type="Node2D"]
 script = ExtResource( 1 )
@@ -19,6 +38,7 @@ script = ExtResource( 2 )
 layer = -1
 
 [node name="ColorRect" type="ColorRect" parent="BG"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
@@ -30,6 +50,7 @@ __meta__ = {
 [node name="UI" type="Control" parent="Fixed"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = SubResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -44,21 +65,20 @@ __meta__ = {
 }
 
 [node name="Requests" type="HBoxContainer" parent="Fixed/UI/Top Left"]
-margin_right = 179.0
-margin_bottom = 25.0
+margin_right = 118.0
+margin_bottom = 19.0
 
 [node name="Label" type="Label" parent="Fixed/UI/Top Left/Requests"]
-margin_right = 171.0
-margin_bottom = 25.0
+margin_right = 110.0
+margin_bottom = 19.0
 text = "Request Queue:"
 
 [node name="Number" type="Label" parent="Fixed/UI/Top Left/Requests"]
-margin_left = 179.0
-margin_right = 179.0
-margin_bottom = 25.0
+margin_left = 118.0
+margin_right = 118.0
+margin_bottom = 19.0
 
 [node name="Bottom Right" type="VBoxContainer" parent="Fixed/UI"]
-visible = false
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -72,11 +92,11 @@ __meta__ = {
 }
 
 [node name="Zoom" type="HBoxContainer" parent="Fixed/UI/Bottom Right"]
-visible = false
 margin_right = 276.0
 margin_bottom = 103.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = SubResource( 4 )
 custom_constants/separation = 50
 
 [node name="in" type="Button" parent="Fixed/UI/Bottom Right/Zoom"]
