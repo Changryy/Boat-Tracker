@@ -38,6 +38,7 @@ script = ExtResource( 2 )
 layer = -1
 
 [node name="ColorRect" type="ColorRect" parent="BG"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {

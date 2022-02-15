@@ -23,6 +23,7 @@ enum scroll_type {
 var scroll_sensitivity = scroll_type.UNKNOWN
 
 func _ready():
+	set_physics_process(false)
 	RequestHandler.connect("forward_response", self, "_on_request_response")
 	RequestHandler.connect("done", self, "_on_loading_finished")
 	TileHandler.connect("send_image", self, "_on_tile_response")
@@ -44,6 +45,7 @@ func _on_request_response(id, result, response_code, headers, body, metadata):
 		cam_pos = $Camera2D.position
 		reload()
 		draw_points(true)
+		set_physics_process(true)
 	if id == "new_pos":
 		var new_pos = Extract.last_pos(body)
 		if Extract.geo(new_pos) == Extract.geo(points[-1]): return
