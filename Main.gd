@@ -111,6 +111,7 @@ func draw_points(move_cam=false):
 var last_drag = 0
 var moving = false
 var current_zoom = TileHandler.zoom_to_scale(zoom)
+var unrendered = true
 func _physics_process(delta):
 	var scale_level = TileHandler.zoom_to_scale(zoom)
 	
@@ -122,7 +123,8 @@ func _physics_process(delta):
 	if Input.is_action_pressed("ui_up"): dir.y -= 1
 	if (dir.length_squared() == 0 and moving) or \
 		Input.is_action_just_released("left_mouse") or \
-		last_drag > OS.get_ticks_msec() - 100: 
+		(last_drag > OS.get_ticks_msec() - 500 and unrendered):
+			unrendered = false
 			draw_tiles()
 	moving = dir.length_squared() != 0
 	$Camera2D.translate(dir * scale_level * 10)
@@ -198,7 +200,9 @@ func _input(event):
 	or (event is InputEventScreenDrag):
 		$Camera2D.position -= event.relative * TileHandler.zoom_to_scale(zoom)
 		
-	if (event is InputEventScreenDrag): last_drag = OS.get_ticks_msec()
+	if (event is InputEventScreenDrag):
+		last_drag = OS.get_ticks_msec()
+		unrendered = true
 
 
 func sort_zoom():
