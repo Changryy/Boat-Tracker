@@ -38,7 +38,6 @@ script = ExtResource( 2 )
 layer = -1
 
 [node name="ColorRect" type="ColorRect" parent="BG"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
@@ -65,18 +64,22 @@ __meta__ = {
 }
 
 [node name="Requests" type="HBoxContainer" parent="Fixed/UI/Top Left"]
-margin_right = 118.0
+margin_right = 70.0
 margin_bottom = 19.0
 
 [node name="Label" type="Label" parent="Fixed/UI/Top Left/Requests"]
-margin_right = 110.0
+modulate = Color( 1, 1, 1, 0.501961 )
+margin_right = 62.0
 margin_bottom = 19.0
-text = "Request Queue:"
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Loading:"
 
 [node name="Number" type="Label" parent="Fixed/UI/Top Left/Requests"]
-margin_left = 118.0
-margin_right = 118.0
+modulate = Color( 1, 1, 1, 0.501961 )
+margin_left = 70.0
+margin_right = 70.0
 margin_bottom = 19.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
 
 [node name="Bottom Right" type="VBoxContainer" parent="Fixed/UI"]
 anchor_left = 1.0
